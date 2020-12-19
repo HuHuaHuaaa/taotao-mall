@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <artifactId>taotao-manager-dao</artifactId>
+            <artifactId>taotao-manager-pojo</artifactId>
             <groupId>com.it</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

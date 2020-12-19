@@ -5,6 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.taotao.common.pojo.EasyUIDataGridResult;
 import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.common.utils.IDUtils;
+import com.taotao.common.utils.JsonUtils;
+import com.taotao.manager.jedis.JedisClient;
+import com.taotao.manager.jedis.JedisClientPool;
 import com.taotao.mapper.TbItemDescMapper;
 import com.taotao.mapper.TbItemMapper;
 import com.taotao.mapper.TbItemParamItemMapper;
@@ -13,7 +16,9 @@ import com.taotao.pojo.TbItemDesc;
 import com.taotao.pojo.TbItemExample;
 import com.taotao.pojo.TbItemParamItem;
 import com.taotao.service.ItemService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
@@ -42,6 +47,15 @@ public class ItemServiceImpl implements ItemService {
 
     @Resource(name="topicDestination")
     private Destination destination;
+
+    @Autowired
+    private JedisClient jedisClient;
+
+    @Value("${ITEN_INFO_KEY}")
+    private String ITEN_INFO_KEY;
+
+    @Value("${ITEN_INFO_KEY_EXPIRE}")
+    private Integer ITEN_INFO_KEY_EXPIRE;
 
     @Override
     public EasyUIDataGridResult getItemList(Integer page, Integer rows) {
@@ -97,13 +111,52 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public TbItem getItemById(Long itemId) {
+        //先从缓存中查询
+        try {
+            String str = jedisClient.get(ITEN_INFO_KEY+":"+itemId+":"+"BASE");
+            if (StringUtils.isNotBlank(str)){
+                //重新设置商品有效期
+                jedisClient.expire(ITEN_INFO_KEY+":"+itemId+":"+"BASE",ITEN_INFO_KEY_EXPIRE);
+                return JsonUtils.jsonToPojo(str,TbItem.class);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         TbItem tbItem = itemMapper.selectByPrimaryKey(itemId);
+        //添加缓存
+        try {
+            jedisClient.set(ITEN_INFO_KEY+":"+itemId+":"+"BASE", JsonUtils.objectToJson(tbItem));
+            jedisClient.expire(ITEN_INFO_KEY+":"+itemId+":"+"BASE",ITEN_INFO_KEY_EXPIRE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return tbItem;
     }
 
     @Override
     public TbItemDesc getItemDescById(Long itemId) {
-        return itemDescMapper.selectByPrimaryKey(itemId);
+        //先从缓存中查询
+        try {
+            String str = jedisClient.get(ITEN_INFO_KEY+":"+itemId+":"+"DESC");
+            if (StringUtils.isNotBlank(str)){
+                //重新设置商品有效期
+                jedisClient.expire(ITEN_INFO_KEY+":"+itemId+":"+"DESC",ITEN_INFO_KEY_EXPIRE);
+                return JsonUtils.jsonToPojo(str,TbItemDesc.class);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        TbItemDesc itemDesc = itemDescMapper.selectByPrimaryKey(itemId);
+
+        try {
+            jedisClient.set(ITEN_INFO_KEY+":"+itemId+":"+"DESC", JsonUtils.objectToJson(itemDesc));
+            jedisClient.expire(ITEN_INFO_KEY+":"+itemId+":"+"DESC",ITEN_INFO_KEY_EXPIRE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return itemDesc;
     }
 
 

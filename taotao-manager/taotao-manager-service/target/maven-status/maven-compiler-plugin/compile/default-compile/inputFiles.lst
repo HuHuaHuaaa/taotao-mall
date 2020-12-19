@@ -1,4 +1,6 @@
 D:\Java\Javaproject\taotao-parent\taotao-manager\taotao-manager-service\src\main\java\com\taotao\service\impl\TestServiceImpl.java
+D:\Java\Javaproject\taotao-parent\taotao-manager\taotao-manager-service\src\main\java\com\taotao\manager\jedis\JedisClient.java
 D:\Java\Javaproject\taotao-parent\taotao-manager\taotao-manager-service\src\main\java\com\taotao\service\impl\ItemParamServiceImpl.java
+D:\Java\Javaproject\taotao-parent\taotao-manager\taotao-manager-service\src\main\java\com\taotao\manager\jedis\JedisClientPool.java
 D:\Java\Javaproject\taotao-parent\taotao-manager\taotao-manager-service\src\main\java\com\taotao\service\impl\ItemServiceImpl.java
 D:\Java\Javaproject\taotao-parent\taotao-manager\taotao-manager-service\src\main\java\com\taotao\service\impl\ItemCatServiceImpl.java

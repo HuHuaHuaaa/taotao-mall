@@ -1,3 +1,0 @@
-0:0:0:0:0:0:0:1 - - [15/Dec/2020:19:24:22 +0800] "GET /search.html?q=iphone HTTP/1.1" 200 64848 http-bio-8086-exec-1 3232
-0:0:0:0:0:0:0:1 - - [15/Dec/2020:19:29:23 +0800] "GET /search.html?q=%E6%89%8B%E8%A1%A8 HTTP/1.1" 200 64311 http-bio-8086-exec-4 179
-0:0:0:0:0:0:0:1 - - [15/Dec/2020:19:29:40 +0800] "GET /search.html?q=%E7%BB%BF%E6%B0%B4%E9%AC%BC HTTP/1.1" 200 19553 http-bio-8086-exec-7 92
