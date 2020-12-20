@@ -116,7 +116,7 @@
     </dependencies>
 
     <build>
-        <finalName>taotao-manager-web</finalName>
+        <finalName>taotao-portal-web</finalName>
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
             <plugins>
                 <!-- 配置tomcat插件 -->
