@@ -39,7 +39,6 @@ public class UserLoginController {
     @RequestMapping(value="/user/token/{token}",method=RequestMethod.GET,produces= MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String getUserByToken(@PathVariable String token,String callback){
-
         //判断是否是Jsonp请求
         if(StringUtils.isNotBlank(callback)){
             //如果是jsonp 需要拼接 类似于fun({id:1});

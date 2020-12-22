@@ -41,7 +41,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         //3.调用mapper的查询方法获取数据
         List<TbUser> list = tbUserMapper.selectByExample(tbUserExample);
         //4.如果查到了数据 不可用 false
-        if (list != null || list.size()>0){
+        if (list != null && list.size()>0){
             return TaotaoResult.ok(false);
         }
         //5.没有查到数据 可用 true
@@ -64,16 +64,20 @@ public class UserRegisterServiceImpl implements UserRegisterService {
             return TaotaoResult.build(400,"注册失败，请校验数据");
         }
         //校验电话号码是否可用
-        TaotaoResult result1 = checkDate(tbUser.getPhone(), 2);
-        if (!(boolean)result1.getData()){
-            //数据不可用
-            return TaotaoResult.build(400,"注册失败，请校验数据");
+        if(StringUtils.isNotBlank(tbUser.getPhone())){
+            TaotaoResult result1 = checkDate(tbUser.getPhone(), 2);
+            if (!(boolean)result1.getData()){
+                //数据不可用
+                return TaotaoResult.build(400,"注册失败，请校验数据");
+            }
         }
         //校验Email是否可用
-        TaotaoResult result2 = checkDate(tbUser.getEmail(), 3);
-        if (!(boolean)result2.getData()){
-            //数据不可用
-            return TaotaoResult.build(400,"注册失败，请校验数据");
+        if(StringUtils.isNotBlank(tbUser.getEmail())){
+            TaotaoResult result2 = checkDate(tbUser.getEmail(), 3);
+            if (!(boolean)result2.getData()){
+                //数据不可用
+                return TaotaoResult.build(400,"注册失败，请校验数据");
+            }
         }
         //如果校验成功，补全其他属性
         tbUser.setCreated(new Date());
