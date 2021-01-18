@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Controller
 public class UserLoginController {
@@ -54,7 +55,14 @@ public class UserLoginController {
 
     @RequestMapping(value = "/user/logout/{token}",method = RequestMethod.GET)
     @ResponseBody
-    public TaotaoResult logout(@PathVariable String token){
-        return userLoginService.logout(token);
+    public String logout(@PathVariable String token,HttpServletResponse response, HttpServletRequest request) throws IOException {
+        TaotaoResult logout = userLoginService.logout(token);
+        if (logout.getStatus()==200){
+            // 代表退出成功
+            CookieUtils.deleteCookie(request, response, TT_TOKEN_KEY);
+            response.sendRedirect("http://localhost:8084");
+            return null;
+        }
+        return null;
     }
 }
